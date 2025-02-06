@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
             int mx, my;
             SDL_GetMouseState(&mx, &my);
             //printf("%d , %d", mx, my);
-
+            const Uint8* state = SDL_GetKeyboardState(NULL);
             switch (event.type)
             {
             case SDL_QUIT:
@@ -67,11 +67,19 @@ int main(int argc, char* argv[]) {
                 Point* p = new Point(mx, my);
                 quadTree.insert(p);
                 break;
-            
+               
             }
-                  
-        }
 
+            if (state[SDL_SCANCODE_0])
+            {
+                quadTree.deleteLast(2);
+            }
+            if (state[SDL_SCANCODE_1])
+            {
+                quadTree.deleteLast(5);
+            }
+        }
+        
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 

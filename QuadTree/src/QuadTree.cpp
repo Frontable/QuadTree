@@ -5,13 +5,17 @@
 
 
 #include "QuadTree.h"
+#include <algorithm>
 
+int Point::nextid = 1;
 
 Point::Point(int x, int y)
 	:x(x)
 	,y(y)
 {
-	printf("Point created at x: %d --- y: %d\n", x, y);
+	id = nextid++;
+	printf("Point created at x: %d --- y: %d and id: %d\n", x, y,id);
+	
 }
 
 Rectangle::Rectangle(int x, int y, int w, int h)
@@ -35,6 +39,7 @@ QuadTree::QuadTree(Rectangle boundary, int capacity)
 	northEast = nullptr;
 	southWest = nullptr;
 	southEast = nullptr;
+	parent = this;
 }
 
 QuadTree::~QuadTree() {
@@ -57,6 +62,7 @@ bool QuadTree::insert(Point* point) {
 
 	if (mPoints.size() < capacity && !divided) {
 		mPoints.emplace_back(point);
+		mAllPoints.emplace_back(point);
 		return true;
 	}
 
@@ -84,6 +90,9 @@ void QuadTree::subdivide() {
 	northEast = new QuadTree(northEastRect, capacity);
 	southWest = new QuadTree(southWestRect, capacity);
 	southEast = new QuadTree(southEastRect, capacity);
+
+	
+	printf("%d\n", parent->boundary.x);
 
 	divided = true;
 
@@ -123,4 +132,19 @@ void QuadTree::render(SDL_Renderer* renderer)
 
 	
 
+}
+
+void QuadTree::deleteLast(int id)
+{
+	auto iter = mAllPoints.begin();
+
+	for (; iter != mAllPoints.end(); ++iter)
+	{
+		if ((*iter)->id == id)
+		{
+			std::iter_swap(iter, mAllPoints.end() - 1);
+			delete (*iter);
+			mAllPoints.pop_back();
+		}
+	}
 }

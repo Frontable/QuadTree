@@ -12,6 +12,9 @@
 struct Point
 {
 
+	static int nextid;
+	int id;
+
 	int x, y;
 
 	Point(int x, int y);
@@ -36,6 +39,7 @@ public:
 
 
 	std::vector<Point*> mPoints;
+	std::vector<Point*> mAllPoints;
 
 	Rectangle boundary;
 	int capacity;
@@ -46,6 +50,8 @@ public:
 	QuadTree* southWest;
 	QuadTree* southEast;
 
+	QuadTree* parent;
+
 	QuadTree(Rectangle boundary, int capacity);
 
 	~QuadTree();
@@ -55,5 +61,7 @@ public:
 	void subdivide();
 
 	void render(SDL_Renderer* renderer);
+
+	void deleteLast(int id);
 
 };
